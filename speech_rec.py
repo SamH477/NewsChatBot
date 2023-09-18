@@ -1,5 +1,6 @@
 import speech_recognition as sr
 import requests
+from commands import test
 
 #Speech Recognition Works for the Bot but Commands need to be added 
 
@@ -22,3 +23,5 @@ def voice_recognition():
         
 while True:
     command = voice_recognition()
+    if (command == 'goodbye'):
+        break
