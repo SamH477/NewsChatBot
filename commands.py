@@ -20,6 +20,7 @@ while True:
         if (cmds == command):
             print("chatbot: " + responses[cmds])
         if (command == "what's the news"): 
+            #add api key
             url = f"https://api.mediastack.com/v1/news?access_key=&limit=5"
             response = requests.get(url)
             data = response.json()
