@@ -19,6 +19,6 @@ response = requests.get(base_url + 'news', params=params)
 if response.status_code == 200:
     data = response.json()
     # Handle the retrieved data here
-    print(data)
+    #print(data)
 else:
     print('Error:', response.status_code)

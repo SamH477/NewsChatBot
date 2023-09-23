@@ -19,12 +19,12 @@ while True:
     for cmds in commands:
         if (cmds == command):
             print("chatbot: " + responses[cmds])
-        if (command == "what's the news"): 
-            #add api key
-            url = f"https://api.mediastack.com/v1/news?access_key=&limit=5"
-            response = requests.get(url)
-            data = response.json()
-            if "data" in data:
+            if (command == "what's the news"): 
+                #add api key
+                url = f"https://api.mediastack.com/v1/news?access_key=&limit=5"
+                response = requests.get(url)
+                data = response.json()
+                if "data" in data:
                     news_articles = data["data"]
                     if news_articles:
                         news_info = "Here are the latest news articles:\n"
@@ -32,8 +32,8 @@ while True:
                             title = article.get("title", "No Title")
                             source = article.get("source", "Unknown Source")
                             news_info += f"- {title} from {source}\n"
-                        print("chatbot: " + news_info)
-                    else:
-                        print("chatbot: No news articles found.")
+                    print("chatbot: " + news_info)
+                else:
+                    print("chatbot: No news articles found.")
         if (command == 'goodbye'):
             break
