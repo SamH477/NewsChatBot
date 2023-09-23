@@ -20,7 +20,3 @@ def voice_recognition():
             print("I could not understand, please try again.")
             return None
         
-while True:
-    command = voice_recognition()
-    if (command == 'goodbye'):
-        break
