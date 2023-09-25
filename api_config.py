@@ -9,7 +9,7 @@ base_url = 'http://api.mediastack.com/v1/'
 # Create a dictionary of query parameters
 params = {
     'access_key': api_key,
-    'limit': 1,  # Number of articles to retrieve
+    'limit': 5,  # Number of articles to retrieve
 }
 
 # Make a GET request to fetch news articles

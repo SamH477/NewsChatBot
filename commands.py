@@ -1,8 +1,10 @@
-#TODO create commands for the chat bot
 import speech_rec
 from datetime import date, datetime
 import api_config
 import requests
+import sys
+
+sys.stdout.reconfigure(encoding='utf-8')
 
 #date and time commands
 today = date.today()
@@ -16,13 +18,16 @@ responses = {"hello": "Hi! How can I help you?", "what's the date": str_today, "
 
 while True:
     command = speech_rec.voice_recognition()
+    if (command == 'goodbye'):
+            sys.exit()
     for cmds in commands:
         if (cmds == command):
             print("chatbot: " + responses[cmds])
-        elif (cmds == "what's the news"): 
+        if (command == "what's the news"): 
             # Add your API key
-            api_key = "YOUR_API_KEY_HERE"
-            url = f"http://api.mediastack.com/v1/news?access_key=&limit=5"
+            api_key = ''
+            #add conditional statements to specify what country they want their news from
+            url = f"http://api.mediastack.com/v1/news?access_key=&countries=au"
             response = requests.get(url)
 
             # Debugging: Print the entire API response
@@ -45,9 +50,6 @@ while True:
                     print("chatbot: 'data' field not found in the API response.")
             else:
                 print(f"chatbot: API request failed with status code {response.status_code}")
-
-        if (command == 'goodbye'):
-            break
 
 
 
