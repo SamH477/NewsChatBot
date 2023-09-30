@@ -1,7 +1,7 @@
 import requests
 
 # Replace 'YOUR_API_KEY' with your actual API key
-api_key = ''
+api_key = '3102dede7401422dab6c17ee6ace14af'
 
 # Define the base URL for the API
 base_url = 'http://api.mediastack.com/v1/'

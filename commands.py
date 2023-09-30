@@ -3,6 +3,7 @@ from datetime import date, datetime
 import api_config
 import requests
 import sys
+import pycountry
 
 sys.stdout.reconfigure(encoding='utf-8')
 
@@ -12,23 +13,45 @@ time = datetime.now()
 str_today = today.strftime("%Y-%m-%d")
 str_time = time.strftime("%I:%M%p")
 
-commands = ["hello", "what's the date", "what time is it", "what's the news"]
+commands = ["hello", "what's the date", "what time is it"]
 
-responses = {"hello": "Hi! How can I help you?", "what's the date": str_today, "what time is it": str_time, "what's the news": "here's the news:"}
+responses = {"hello": "Hi! How can I help you?", "what's the date": str_today, "what time is it": str_time}
 
 while True:
-    #command = speech_rec.voice_recognition()
-    command = "what's the news for "
+    command = speech_rec.voice_recognition()
     if (command == 'goodbye'):
             sys.exit()
     for cmds in commands:
         if (cmds == command):
             print("chatbot: " + responses[cmds])
-        if (command == "what's the news"): 
+        else:
+            country = ''
+            for char in command:
+                cmd = ''
+                cmd += char
+                if char == 'r':
+                    if (cmd == "what's the news for"):
+                        for char in command:
+                            if (char == 'r'):
+                                for char in command:
+                                    if(char == ' '):
+                                        for char in command:
+                                            country += char
+            try:
+            # Use pycountry to search for the country name
+                country = pycountry.countries.search_fuzzy(country)[0]
+                country_code = country.alpha_2
+
+            # Rest of your code here...
+        
+            except LookupError:
+                print(f"chatbot: Could not find the country code for '{country}'")
+                continue  # Skip processing this command and continue the loop
+ 
             # Add your API key
-            api_key = ''
+            api_key = '3102dede7401422dab6c17ee6ace14af'
             #add conditional statements to specify what country they want their news from
-            url = f"http://api.mediastack.com/v1/news?access_key=&countries=au"
+            url = f"http://api.mediastack.com/v1/news?access_key=3102dede7401422dab6c17ee6ace14af&countries={country_code}"
             response = requests.get(url)
 
             # Debugging: Print the entire API response
