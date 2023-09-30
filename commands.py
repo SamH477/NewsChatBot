@@ -39,7 +39,7 @@ while True:
                                             country += char
             try:
             # Use pycountry to search for the country name
-                country = pycountry.countries.search_fuzzy(country)[0]
+                country = pycountry.countries.search_fuzzy(country)[0] #fix this line
                 country_code = country.alpha_2
 
             # Rest of your code here...
