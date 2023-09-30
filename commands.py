@@ -17,7 +17,8 @@ commands = ["hello", "what's the date", "what time is it", "what's the news"]
 responses = {"hello": "Hi! How can I help you?", "what's the date": str_today, "what time is it": str_time, "what's the news": "here's the news:"}
 
 while True:
-    command = speech_rec.voice_recognition()
+    #command = speech_rec.voice_recognition()
+    command = "what's the news for "
     if (command == 'goodbye'):
             sys.exit()
     for cmds in commands:
@@ -31,7 +32,7 @@ while True:
             response = requests.get(url)
 
             # Debugging: Print the entire API response
-            print(response.text)
+            #print(response.text)
 
             if response.status_code == 200:
                 data = response.json()
