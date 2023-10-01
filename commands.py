@@ -25,34 +25,25 @@ while True:
     for cmds in commands:
         if (cmds == command):
             print("chatbot: " + responses[cmds])
-        else:
-            country = ''
-            for char in command:
-                cmd = ''
-                cmd += char
-                if char == 'r':
-                    if (cmd == "what's the news for"):
-                        for char in command:
-                            if (char == 'r'):
-                                for char in command:
-                                    if(char == ' '):
-                                        for char in command:
-                                            country += char
-            try:
+        if command.startswith("what's the news for"):
+    # Split the command into words and look for the country
+            words = command.split()
+            if len(words) >= 5:
+                country_name = ' '.join(words[4:])
+                try:
             # Use pycountry to search for the country name
-                country = pycountry.countries.search_fuzzy(country)[0] #fix this line
-                country_code = country.alpha_2
-
+                    country = pycountry.countries.search_fuzzy(country_name)
+                    if country:
+                        country_code = country[0].alpha_2
             # Rest of your code here...
         
-            except LookupError:
-                print(f"chatbot: Could not find the country code for '{country}'")
-                continue  # Skip processing this command and continue the loop
+                except LookupError:
+                    print(f"chatbot: Could not find the country code for '{country}'")
+                    continue  # Skip processing this command and continue the loop
  
             # Add your API key
-            api_key = '3102dede7401422dab6c17ee6ace14af'
             #add conditional statements to specify what country they want their news from
-            url = f"http://api.mediastack.com/v1/news?access_key=3102dede7401422dab6c17ee6ace14af&countries={country_code}"
+            url = f"http://api.mediastack.com/v1/news?access_key={api_config.api_key}&countries={country_code}"
             response = requests.get(url)
 
             # Debugging: Print the entire API response
