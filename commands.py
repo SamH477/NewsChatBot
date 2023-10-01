@@ -12,6 +12,7 @@ time = datetime.now()
 str_today = today.strftime("%Y-%m-%d") 
 str_time = time.strftime("%I:%M%p")
 
+
 commands = ["hello", "what's the date", "what time is it"]
 
 responses = {"hello": "Hi! How can I help you?", "what's the date": str_today, "what time is it": str_time}
