@@ -7,8 +7,6 @@ import pycountry
 
 sys.stdout.reconfigure(encoding='utf-8')
 
-#date and time commands
-
 today = date.today()
 time = datetime.now()
 str_today = today.strftime("%Y-%m-%d") 
