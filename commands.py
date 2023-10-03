@@ -12,9 +12,9 @@ time = datetime.now()
 str_today = today.strftime("%Y-%m-%d") 
 str_time = time.strftime("%I:%M%p")
 
-
+#basic commands
 commands = ["hello", "what's the date", "what time is it"]
-
+#basic responses
 responses = {"hello": "Hi! How can I help you?", "what's the date": str_today, "what time is it": str_time}
 
 while True:
@@ -24,21 +24,21 @@ while True:
     for cmds in commands:
         if (cmds == command):
             print("chatbot: " + responses[cmds])
-        if command.startswith("what's the news for"):
+    if command.startswith("what's the news for"):
     # Split the command into words and look for the country
-            words = command.split()
-            if len(words) >= 5:
-                country_name = ' '.join(words[4:])
-                try:
+        words = command.split()
+        if len(words) >= 5:
+            country_name = ' '.join(words[4:])
+            try:
             # Use pycountry to search for the country name
-                    country = pycountry.countries.search_fuzzy(country_name)
-                    if country:
+                country = pycountry.countries.search_fuzzy(country_name)
+                if country:
                         country_code = country[0].alpha_2
             # Rest of your code here...
         
-                except LookupError:
-                    print(f"chatbot: Could not find the country code for '{country}'")
-                    continue  # Skip processing this command and continue the loop
+            except LookupError:
+                print(f"chatbot: Could not find the country code for '{country}'")
+                continue  # Skip processing this command and continue the loop
  
             # Add your API key
             #add conditional statements to specify what country they want their news from
@@ -57,6 +57,7 @@ while True:
                         for article in news_articles:
                             title = article.get("title", "No Title")
                             source = article.get("source", "Unknown Source")
+                            url = article.get("url", "No URL")
                             news_info += f"- {title} from {source}\n"
                         print("chatbot: " + news_info.encode('utf-8', 'ignore').decode('utf-8'))
                     else:
