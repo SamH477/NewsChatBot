@@ -140,6 +140,49 @@
                 }        
             }
 
+            if (transcript == "what's the sports news") {
+                document.getElementById('response').innerText = "";
+                    
+                try {
+
+                    const apiUrl = `http://api.mediastack.com/v1/news?access_key=${api_config.api_key}&categories=sports`;
+                
+                    fetch(apiUrl)
+                        .then(response => {
+                            if (response.status === 200) {
+                                return response.json();
+                            } else {
+                                throw new Error('Network response was not ok');
+                            }
+                        })
+                        .then(data => {
+                            if ("data" in data) {
+                                const news_articles = data.data;
+                                if (news_articles.length > 0) {
+                                    let news_info = "<ul>";
+                                    news_articles.forEach(article => {
+                                        const title = article.title || "No Title";
+                                        const source = article.source || "Unknown Source";
+                                       const url = article.url || "No URL";
+                                        news_info += `<li><a href='${url}' target='_blank'>${title}</a> from ${source}</li>`;
+                                    });
+                                    news_info += "</ul>";
+                                    const message = `Here's the latest sports news: ${news_info}`;
+                                    document.getElementById('chatbotResponse').innerHTML = message;
+                                    
+                                } else {
+                                    document.getElementById('chatbotResponse').innerText="No news articles found.";
+                                }
+                            } else {
+                                document.getElementById('chatbotResponse').innerText="No 'data' field in the response";
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                } catch (error) {
+                    document.getElementById('chatbotResponse').innerText=`chatbot: An error occurred: ${error}`;
+                }        
+            }
+
             if(transcript == "goodbye"){
                 document.getElementById('chatbotResponse').innerText = "Response from chatbot: Goodbye";
                 recognition.stop();
