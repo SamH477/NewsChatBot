@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Speech Recognition</title>
+   <style>
+        .button {
+            background-color: blue;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 12px;
+        }
+
+        .button:hover {
+            background-color: white; 
+            color: black;
+            border: 2px solid blue;
+        }
+    </style>
+</head>
+<body>
+   <h1>Speech Recognition</h1>
+
+   <button id="startListening" class="button">Start Listening</button>
+   <button id="stopListening" class="button">Stop Listening</button>
+   <div id="response"></div>
+   <div id="userSaid"></div>
+   <div id="chatbotResponse"></div>
+
+   <script>
+       let today = new Date();
+       let str_today = today.getFullYear() + '-' + (today.getMonth() + 1).toString().padStart(2, '0') + '-' + today.getDate().toString().padStart(2, '0');
+
+       let time = new Date();
+       let str_time = time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+
+       let commands = ["hello", "what's the date", "what time is it"];
+       let responses = {"hello": "Hi! How can I help you?", "what's the date": str_today, "what time is it": str_time};
+
+       document.getElementById('startListening').addEventListener('click', function() {
+           document.getElementById('response').innerText = "Listening...";
+           document.getElementById('userSaid').innerText = "";
+           document.getElementById('chatbotResponse').innerText = "";
+           recognition.start();
+       });
+
+       document.getElementById('stopListening').addEventListener('click', function() {
+           document.getElementById('response').innerText = "Goodbye";
+           document.getElementById('userSaid').innerText = "";
+           recognition.stop();
+       });
+
+       let recognition = new webkitSpeechRecognition();
+       recognition.onresult = function(event) {
+           let transcript = event.results[0][0].transcript;
+           document.getElementById('userSaid').innerText = "You said: " + transcript;
+           
+           for (let cmds of commands) {
+                if (cmds === transcript) {
+                    document.getElementById('chatbotResponse').innerText = "Response from chatbot: " + responses[cmds];
+                }
+            }
+            if(document.getElementById('chatbotResponse').innerText == ""){
+                document.getElementById('chatbotResponse').innerText = "Response from chatbot: No command recognized.";
+
+            }
+            /*if(transcripts == "goodbye"){
+                document.getElementById('chatbotResponse').innerText = "Response from server: Goodbye";
+                recognition.stop();
+            }*/
+            //return "Unknown";
+           /*fetch('/listen', { method: 'POST' })
+            .then(response => response.text())
+            .then(text => {
+            document.getElementById('chatbotResponse').innerText = "Response from server: " + text;
+            });*/
+            //recognition.stop();
+
+           /*if (transcript.toLowerCase() === "what is the news") {
+               fetch('/listen', {
+                   method: 'GET'
+               })
+               .then(response => response.text())
+               .then(text => {
+                   document.getElementById('chatbotResponse').innerText = "Response from server: " + text;
+               });
+           }*/
+       };
+   </script>
+</body>
+</html>
