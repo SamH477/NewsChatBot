@@ -40,19 +40,49 @@
         }
         #response, #userSaid, #chatbotResponse {
             margin: 10px 0;
+            font-size: 24px;
         }
+        #userSaid{
+            color: blue;
+        }
+        #response{
+            color: red;
+        }
+
+        .message {
+            padding: 5px;
+            border-radius: 5px;
+            margin: 5px;
+        }
+
+        .message.user {
+            background-color: #f0f0f0;
+            align-self: flex-start;
+        }
+
+        .message.chatbot {
+            background-color: #e0e0e0;
+            align-self: flex-end;
+        }
+        
+#conversationHistory {
+    display: flex; /* Make it a flex container */
+    flex-direction: column; /* Stack history items vertically */
+    margin: 0 10px; /* Add some margin for spacing */
+}
     </style>
 </head>
 <body>
    <h1>Speech Recognition Chat Bot</h1>
 
-   <div class=""container">
+   <div class="container">
         <button id="startListening" class="button">Start Listening</button>
         <button id="stopListening" class="button">Stop Listening</button>
    </div>
    <div id="response"></div>
    <div id="userSaid"></div>
    <div id="chatbotResponse"></div>
+   <div id="conversationHistory"></div>
 
    <script>
        let listening = false; // Flag to track if we are currently listening
@@ -62,12 +92,14 @@
        let time = new Date();
        let str_time = time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
 
-       let commands = ["hello", "what's the date", "what time is it"];
-       let responses = {"hello": "Hi! How can I help you?", "what's the date": str_today, "what time is it": str_time};
+       let commands = ["hello", "what's the date", "what time is it", "what's your name"];
+       let responses = {"hello": "Hi! How can I help you?", "what's the date": str_today, "what time is it": str_time, "what's your name": "I'm chatbot, a virtual assistant here to help you."};
 
        const api_config = {
            api_key: ''
        };
+       // Define an array to store the conversation history
+       let conversationHistory = [];
 
        document.getElementById('startListening').addEventListener('click', function() {
            document.getElementById('response').innerText = "Listening...";
@@ -87,6 +119,10 @@
 
        let recognition = new webkitSpeechRecognition();
        recognition.onresult = function(event) {
+
+
+        
+
         if(listening == true){
            let transcript = event.results[0][0].transcript;
            document.getElementById('userSaid').innerText = "You said: " + transcript;
@@ -96,6 +132,12 @@
                     document.getElementById('chatbotResponse').innerText = "Response from chatbot: " + responses[cmds];
                     document.getElementById('response').innerText = "";
 
+                    // Add entry to conversation history
+                    conversationHistory.push({ user: transcript, chatbot: responses[cmds] });
+
+                    // Call the displayConversationHistory function
+                    displayConversationHistory();
+
                 }
             }
 
@@ -103,11 +145,16 @@
                 document.getElementById('chatbotResponse').innerText = "Response from chatbot: Goodbye";
                 document.getElementById('response').innerText = "";
                 listening = false;
+                // Add entry to conversation history
+                conversationHistory.push({ user: transcript,  chatbot: "Goodbye"});
+
+                // Call the displayConversationHistory function
+                displayConversationHistory();
 
                 recognition.stop();
             }
 
-            if (transcript == "what's the news") {
+            if (transcript == "what's the news" || transcript == "what is the news") {
                 document.getElementById('response').innerText = "";
                     
                 try {
@@ -147,7 +194,13 @@
                         .catch(error => console.error('Error:', error));
                 } catch (error) {
                     document.getElementById('chatbotResponse').innerText=`chatbot: An error occurred: ${error}`;
-                }        
+                }
+                
+                // Add entry to conversation history
+                conversationHistory.push({ user: transcript,  chatbot: "Here's the latest news:"});
+
+                // Call the displayConversationHistory function
+                displayConversationHistory();
             }
 
             if (transcript == "what's the sports news") {
@@ -191,6 +244,11 @@
                 } catch (error) {
                     document.getElementById('chatbotResponse').innerText=`chatbot: An error occurred: ${error}`;
                 }        
+                // Add entry to conversation history
+                conversationHistory.push({ user: transcript,  chatbot: "Here's the latest sports news:"});
+
+                // Call the displayConversationHistory function
+                displayConversationHistory();
             }
 
             if(document.getElementById('chatbotResponse').innerText == ""){
@@ -198,11 +256,39 @@
 
                 document.getElementById('chatbotResponse').innerText = "Response from chatbot: No command recognized.";
 
+                // Add entry to conversation history
+                conversationHistory.push({ user: transcript, chatbot: "No command recognized."});
+
+                // Call the displayConversationHistory function
+                displayConversationHistory();
+
             }
+            
 
    
         }    
        };
+       
+
+function displayConversationHistory() {
+  let historyElement = document.getElementById('conversationHistory');
+  historyElement.innerHTML = '';
+
+  conversationHistory.forEach(entry => {
+      let userMessage = document.createElement('div');
+      userMessage.className = 'message user';
+      userMessage.innerText = 'User: ' + entry.user;
+
+      let chatbotMessage = document.createElement('div');
+      chatbotMessage.className = 'message chatbot';
+      chatbotMessage.innerText = 'Chatbot: ' + entry.chatbot;
+
+      historyElement.appendChild(userMessage);
+      historyElement.appendChild(chatbotMessage);
+  });
+}
+
+
    </script>
 </body>
 </html>
