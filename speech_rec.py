@@ -1,21 +1,15 @@
 import speech_recognition as sr
 
-#Speech Recognition Works for the Bot but Commands need to be added 
-
 recognizer = sr.Recognizer()
-mic = sr.Microphone()
-def voice_recognition():
-    with mic as source:
-        print("Listening...")
+
+def voice_recognition(timeout=10):
+    mic = sr.Microphone()  # Create microphone object
+    with mic:
         try:
-            audio = recognizer.listen(source, timeout=10)  # Listen for up to 10 seconds
-            command = recognizer.recognize_google(audio).lower()  # listens to speech using google's speech recognition api
-            print("You:", command)
+            audio = recognizer.listen(mic, timeout=timeout)  # Listen for up to 10 seconds
+            command = recognizer.recognize_google(audio).lower()  # Listens to speech using Google's speech recognition API
             return command
         except sr.WaitTimeoutError:
-            print("Timeout. No command recognized.")
             return None
         except sr.UnknownValueError:
-            print("I could not understand, please try again.")
             return None
-        

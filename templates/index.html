@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot</title>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            background-color: #212121;
+            margin: 0;
+            color: white;
+        }
+
+        #container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        #conversation {
+            background-color: #333;
+            border: 3px solid white;
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            overflow-y: scroll;
+            max-height: 400px;
+        }
+
+        h1 {
+            font-size: 36px;
+            text-align: center;
+            margin: 20px 0;
+            text-transform: uppercase;
+            color: white;
+        }
+
+        h2 {
+            font-size: 24px;
+            text-align: center;
+            margin: 10px 0;
+            color: white;
+        }
+
+        p {
+            text-align: center;
+        }
+
+        .user-message {
+            text-align: left;
+            color: white;
+            background-color: #007acc;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            max-width: 80%;
+        }
+
+        .chatbot-message {
+            text-align: left;
+            color: white;
+            background-color: #009688;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            max-width: 80%;
+        }
+        .dropbtn {
+            background-color: #009688;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .dropbtn:hover, .dropbtn:focus {
+        background-color: #007acc;
+        }
+
+        .dropdown {
+        position: relative;
+        display: inline-block;
+        }
+
+        .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #009688;
+        width: 500px; /* Set the width instead of min-width */
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        right: 0;
+        left: 50%; /* Center the dropdown content relative to its parent (the button) */
+        transform: translateX(-50%); /* Center the content horizontally */
+        z-index: 1;
+        }
+
+        .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        }
+
+        .dropdown a:hover {background-color: #ddd;}
+
+        .show {display: block;}
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Welcome to the News Chatbot with Voice Recognition!</h1>
+        <h2>To get started, say "hello"</h2>
+        <div id="conversation"></div>
+        <br>
+        <div class="dropdown">
+            <button onclick="myFunction()" class="dropbtn">Available Commands</button>
+            <div id="myDropdown" class="dropdown-content">
+                <p>
+                    "hello": greets the chatbot<br>
+                    "what's the date?": gets today's date<br>
+                    "what's time is it?": gets the current time<br>
+                    "what's the news for __?": just specify a country to get that country's news<br>
+                    "goodbye": ends chatbot session
+                </p>
+            </div>
+        </div>
+    </div>
+    <script>
+        function listenForCommand() {
+            fetch('/listen', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    const conversationContainer = document.getElementById('conversation');
+                    const userMessage = data.user ? `<div class="user-message">You: ${data.user}</div>` : '';
+                    const chatbotMessage = data.chatbot ? `<div class="chatbot-message">Chatbot: ${data.chatbot}</div>` : '';
+
+                    // Check if the response contains news articles
+                    if (data.chatbot && data.chatbot.includes("<ul>")) {
+                        conversationContainer.innerHTML += userMessage + data.chatbot;
+                    } else {
+                        conversationContainer.innerHTML += userMessage + chatbotMessage;
+                    }
+
+                    // Scroll to the bottom of the conversation container
+                    conversationContainer.scrollTop = conversationContainer.scrollHeight;
+
+                    setTimeout(listenForCommand, 1000);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        listenForCommand();
+    </script>
+    <script>
+        function myFunction() {
+            var dropdown = document.getElementById("myDropdown");
+            dropdown.classList.toggle("show");
+        }
+
+        // Close the dropdown if the user clicks outside of it
+        window.onclick = function(event) {
+            if (!event.target.matches('.dropbtn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
