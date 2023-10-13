@@ -96,7 +96,7 @@
        let responses = {"hello": "Hi! How can I help you?", "what's the date": str_today, "what time is it": str_time, "what's your name": "I'm chatbot, a virtual assistant here to help you."};
 
        const api_config = {
-           api_key: ''
+           api_key: 'a5d542ed08910e54ccf3efbb6a0f8c21'
        };
        // Define an array to store the conversation history
        let conversationHistory = [];
@@ -183,6 +183,11 @@
                                     news_info += "</ul>";
                                     const message = `Here's the latest news: ${news_info}`;
                                     document.getElementById('chatbotResponse').innerHTML = message;
+                                    // Add entry to conversation history
+                                    conversationHistory.push({ user: transcript,  chatbot: "Here's the latest news:"});
+
+                                    // Call the displayConversationHistory function
+                                    displayConversationHistory();
                                     
                                 } else {
                                     document.getElementById('chatbotResponse').innerText="No news articles found.";
@@ -196,11 +201,7 @@
                     document.getElementById('chatbotResponse').innerText=`chatbot: An error occurred: ${error}`;
                 }
                 
-                // Add entry to conversation history
-                conversationHistory.push({ user: transcript,  chatbot: "Here's the latest news:"});
-
-                // Call the displayConversationHistory function
-                displayConversationHistory();
+                
             }
 
             if (transcript == "what's the sports news") {
@@ -232,6 +233,11 @@
                                     news_info += "</ul>";
                                     const message = `Here's the latest sports news: ${news_info}`;
                                     document.getElementById('chatbotResponse').innerHTML = message;
+                                    // Add entry to conversation history
+                                    conversationHistory.push({ user: transcript,  chatbot: "Here's the latest sports news:"});
+
+                                    // Call the displayConversationHistory function
+                                    displayConversationHistory();
                                     
                                 } else {
                                     document.getElementById('chatbotResponse').innerText="No news articles found.";
@@ -244,11 +250,7 @@
                 } catch (error) {
                     document.getElementById('chatbotResponse').innerText=`chatbot: An error occurred: ${error}`;
                 }        
-                // Add entry to conversation history
-                conversationHistory.push({ user: transcript,  chatbot: "Here's the latest sports news:"});
-
-                // Call the displayConversationHistory function
-                displayConversationHistory();
+                
             }
 
             if(document.getElementById('chatbotResponse').innerText == ""){
