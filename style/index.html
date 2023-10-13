@@ -5,6 +5,21 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Speech Recognition</title>
    <style>
+        body, html {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
         .button {
             background-color: blue;
             border: none;
@@ -15,6 +30,7 @@
             display: inline-block;
             font-size: 16px;
             border-radius: 12px;
+            margin-right: 10px;
         }
 
         .button:hover {
@@ -22,18 +38,24 @@
             color: black;
             border: 2px solid blue;
         }
+        #response, #userSaid, #chatbotResponse {
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
-   <h1>Speech Recognition</h1>
+   <h1>Speech Recognition Chat Bot</h1>
 
-   <button id="startListening" class="button">Start Listening</button>
-   <button id="stopListening" class="button">Stop Listening</button>
+   <div class=""container">
+        <button id="startListening" class="button">Start Listening</button>
+        <button id="stopListening" class="button">Stop Listening</button>
+   </div>
    <div id="response"></div>
    <div id="userSaid"></div>
    <div id="chatbotResponse"></div>
 
    <script>
+       let listening = false; // Flag to track if we are currently listening
        let today = new Date();
        let str_today = today.getFullYear() + '-' + (today.getMonth() + 1).toString().padStart(2, '0') + '-' + today.getDate().toString().padStart(2, '0');
 
@@ -46,26 +68,12 @@
        const api_config = {
            api_key: ''
        };
-       
-       //const isoCountries = require('i18n-iso-countries');
-
-        // Load localization data for English (en)
-       // isoCountries.registerLocale(require('i18n-iso-countries/langs/en.json'));
-
-      /*  function getCountryCode(countryName) {
-            try {
-            const countryCode = isoCountries.getAlpha2Code(countryName, 'en');
-            return countryCode;
-            } catch (error) {
-                return null; // Country name not found
-            }
-        }
-*/
 
        document.getElementById('startListening').addEventListener('click', function() {
            document.getElementById('response').innerText = "Listening...";
            document.getElementById('userSaid').innerText = "";
            document.getElementById('chatbotResponse').innerText = "";
+           listening = true; // Set listening to true
            recognition.start();
        });
 
@@ -73,12 +81,13 @@
            document.getElementById('response').innerText = "Goodbye";
            document.getElementById('userSaid').innerText = "";
            document.getElementById('chatbotResponse').innerText = "";
-
+           listening = false; // Set listening to false
            recognition.stop();
        });
 
        let recognition = new webkitSpeechRecognition();
        recognition.onresult = function(event) {
+        if(listening == true){
            let transcript = event.results[0][0].transcript;
            document.getElementById('userSaid').innerText = "You said: " + transcript;
            
@@ -93,6 +102,7 @@
             if(transcript == "goodbye"){
                 document.getElementById('chatbotResponse').innerText = "Response from chatbot: Goodbye";
                 document.getElementById('response').innerText = "";
+                listening = false;
 
                 recognition.stop();
             }
@@ -183,17 +193,15 @@
                 }        
             }
 
-            if(transcript == "goodbye"){
-                document.getElementById('chatbotResponse').innerText = "Response from chatbot: Goodbye";
-                recognition.stop();
-            }
             if(document.getElementById('chatbotResponse').innerText == ""){
                 document.getElementById('response').innerText = "";
 
                 document.getElementById('chatbotResponse').innerText = "Response from chatbot: No command recognized.";
 
             }
-            
+
+   
+        }    
        };
    </script>
 </body>
