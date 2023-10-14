@@ -52,7 +52,6 @@ def process_command(command):
                 country = pycountry.countries.search_fuzzy(country_name)
                 if country:
                     country_code = country[0].alpha_2
-                # Rest of your code here...
             except LookupError:
                 print(f"chatbot: Could not find the country code for '{country}'")
 
