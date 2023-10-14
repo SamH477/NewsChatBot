@@ -1,5 +1,4 @@
 import speech_recognition as sr
-import sys
 
 recognizer = sr.Recognizer()
 

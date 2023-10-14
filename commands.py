@@ -26,7 +26,7 @@ responses = {
     "goodbye": "see you later!"
 }
 
-@app.route('/')
+@app.route('/') 
 def index():
     return render_template('index.html')
 
